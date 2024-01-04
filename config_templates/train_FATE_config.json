@@ -131,9 +131,9 @@
     },
         
     "wandb_config": {
-        "project_name": "wacv24",
-        "team": "cvl-myeflow",
-        "group": "public_repo_test_fromscratch",
+        "project_name": "your_project_name",
+        "team": "your_team_name",
+        "group": "your_group_name",
         "notes": "",
         "tags": ["add", "your", "tags"],
         "enabled": true
