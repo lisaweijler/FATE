@@ -1,0 +1,141 @@
+{
+    "type_name": "src.utils.datastructures.SupervisedFATEConfig",
+
+    "logging_config" : {
+        "enable_file_log_handler" : true,
+        "file_log_handler_level" : 10
+    },
+    "data_loader_config": {
+        "data_splits_dir": "data_splits/your_data_spit",
+        "preloaded_data_dir": "/path/to/preloaded_data",
+        "batch_size": 8,
+        "shuffle": true,
+        "num_workers": 2,
+        "flow_sample_config": {
+            "markers": [],
+            "filter_gates": [
+                "Intact"
+            ],
+            "classes_dict": {
+                "blast34": 1,
+                "blastother": 1,
+                "blast": 1,
+                "other": 0
+            }
+        },
+        "transforms_config": {
+            "execution_probability": 1.0,
+            "transforms_list": [ 
+                {"module": "src.data_transforms.data_transforms.resample", 
+                 "kwargs": {
+                    "scale_blasts":0.0, 
+                    "scale_healthy":0.0, 
+                    "cell_count":8000
+                 }
+                }
+            ]
+        }
+                  
+        
+    },
+    "do_eval": true,
+
+    "train_metrics_list": [
+        {"module": "src.metrics.metric.f1_score"},
+        {"module": "src.metrics.metric.mrd_gt"},
+        {"module": "src.metrics.metric.mrd_pred"},
+        {"module": "src.metrics.metric.precision"},
+        {"module": "src.metrics.metric.recall"}
+    ],
+
+    "test_metrics_list": [
+        {"module": "src.metrics.metric.tp"},
+        {"module": "src.metrics.metric.tn"},
+        {"module": "src.metrics.metric.fp"},
+        {"module": "src.metrics.metric.fn"},
+        {"module": "src.metrics.metric.precision"},
+        {"module": "src.metrics.metric.recall"},
+        {"module": "src.metrics.metric.f1_score"},
+        {"module": "src.metrics.metric.mrd_gt"},
+        {"module": "src.metrics.metric.mrd_pred"}
+    ],
+
+    "marker_dict_path": "marker_dicts/marker_dict_featuretransformer_b-ALL_vie-AML_mrd-dia-control_wacv24.json",
+    "supervised_model": {
+        "n_marker": 35,
+        "latent_dim": 8,
+        "encoder_out_dim": 32,
+        "pos_encoding_dim": 10,
+
+        "encoder": {
+            "module": "src.models.FATE_models.FATE",
+            "kwargs": {
+                "dim_event_embedding": 32,
+                "num_heads_embedder": 1,
+                "dim_hidden": 32,
+                "num_heads": 4,
+                "num_inds": 16,
+                "layer_norm": true,
+                "pos_encoding_dim": 10
+            }
+        },
+
+        "pred_head": {
+            "module": "src.models.mlp.MLP",
+            "kwargs": {
+                "dim_input": 8,
+                "dim_hidden": 8,
+                "hidden_layers": 1,
+                "dim_output": 1
+            }
+        }
+    },
+
+    "loss": {
+        "module": "torch.nn.functional.binary_cross_entropy_with_logits"
+    },
+
+    "optimizer": {
+        "module": "torch.optim.AdamW",
+        "kwargs": {
+            "lr": 0.001
+        }
+    },
+
+    "lr_scheduler": {
+        "module": "torch.optim.lr_scheduler.CosineAnnealingLR",
+        "kwargs": {
+            "T_max": 10,
+            "eta_min": 0.0002
+        }
+    },
+    
+    "trainer_config": {
+        "epochs": 300,
+        "early_stop": 200,
+        "save_period": 50,
+        "monitor_config": {
+            "criterion": "max",
+            "data_type": "val",
+            "metric_name":"f1_score"
+        }
+    },
+
+    "vis_config": {
+        "panel": [
+            ["FSC-A", "SSC-A"],
+            ["CD45", "SSC-A"],
+            ["CD33", "SSC-A"],
+            ["CD45", "CD33"]
+        ]
+    },
+        
+    "wandb_config": {
+        "project_name": "wacv24",
+        "team": "cvl-myeflow",
+        "group": "public_repo_test_fromscratch",
+        "notes": "",
+        "tags": ["add", "your", "tags"],
+        "enabled": true
+    }
+}
