@@ -27,7 +27,7 @@ In this section you will find information on how to use this repository.  In par
 
 ### General information ⚙️
 * **Config files**  In the folder `config_templates` 3 templates for pre-training, fine-tuning and training from scratch are provided. Those can be used as a starting point for your own experiments and adjusted as needed. 
-* **Data** This project works with preloaded flow cytometry samples saved via pickle as pandas dataframes. To preload (including compensation, transformation and scaling) the package [flowmepy](https://pypi.org/project/flowmepy/) was used. The config files expect a "preloaded_data_dir" argument where the path to the folder with the preloaded samples is specified. The path "data_splits_dir" should lead to a folder containing three text files (train.txt and eval.txt are needed during training and test.txt is needed during testing), where every line contains the path to a fcm file (.xml or .analysis) those are used to load the correct files from the "preloaded_data_dir". In the folder `data_splits` and example is given. The vie14, bln and bue data from our work can be downloaded from [here](https://flowrepository.org/id/FR-FCM-ZYVT).
+* **Data** This project works with preloaded flow cytometry samples saved via pickle as pandas dataframes. To preload (including compensation, transformation and scaling) the package [flowmepy](https://pypi.org/project/flowmepy/) was used. The config files expect a "preloaded_data_dir" argument, where the path to the folder with the preloaded samples is specified. The path "data_splits_dir" should lead to a folder containing three *.txt files (train.txt and eval.txt are needed during training, while test.txt is needed during testing), where every line contains the path to a FCM file (.xml or .analysis). Those file paths in the *.txt files are used to load the correct files from the "preloaded_data_dir". In the folder `data_splits` an example is given. The vie14, bln and bue data from our work can be downloaded from [here](https://flowrepository.org/id/FR-FCM-ZYVT).
 * **Marker dictionary** In the folder `marker_dicts` the Marker/Feature dictionary is saved specifying all features used.
 
 ### Pre-training 🚀
@@ -36,7 +36,7 @@ Example command for pre-training FATE:
 python pretrain.py --config config_templates/pretrain_FATEMaskedAE_config.json --device 0
 ```
 ### Fine-tuning & Training from scratch 🚀
-For fine-tuning and training from scratch the file `train.py` can used. If in the config a "pretrained_model_path" is given then the model is initialized with the pretrained weights of the specified model.
+For fine-tuning and training from scratch the file `train.py` can be used. If in the config a "pretrained_model_path" is given then the model is initialized with the pretrained weights of the specified model.
 
 Example command for fine-tuning FATE:
 ```
