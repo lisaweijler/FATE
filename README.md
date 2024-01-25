@@ -43,7 +43,7 @@ Example command for fine-tuning FATE:
 python train.py --config config_templates/finetune_pretrained_FATE_config.json --device 0
 ```
 
-Example command for fine-tuning FATE:
+Example command for training FATE from scratch:
 ```
 python train.py --config config_templates/train_FATE_config.json --device 0
 ```
