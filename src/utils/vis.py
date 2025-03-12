@@ -78,19 +78,24 @@ class BasePlot(abc.ABC):
 
     SAVE_AS_SVG_IN_ADDITION = False
 
-    def __init__(self, filepath: Path, caption: str, ax: matplotlib.axes = plt.gca()):
+    def __init__(self, enabled: bool, filepath: Path, caption: str, ax: matplotlib.axes = plt.gca()):
+        self.enabled = enabled
         self.filepath = filepath
         self.caption = caption
         self.ax = ax
         matplotlib.rcParams['axes.linewidth'] = 2
 
     def showPlot(self):
+        if not self.enabled:
+            return
         plt.show()
         plt.clf()
         plt.cla()
         plt.close()
 
     def savePlot(self):
+        if not self.enabled:
+            return
         plt.savefig(self.filepath, dpi=80)
         if BasePlot.SAVE_AS_SVG_IN_ADDITION and self.filepath.name.endswith(".png"):
             plt.savefig(self.filepath.parent / Path(self.filepath.name.replace(".png", ".svg")), dpi=300)
@@ -104,13 +109,15 @@ class BasePlot(abc.ABC):
         pass
 
     def generatePlotFile(self):
+        if not self.enabled:
+            return
         self.createPlot()
         self.savePlot()
 
 
 class PanelPlot(BasePlot):
 
-    def __init__(self, filepath: Path, caption: str, 
+    def __init__(self, enabled: bool, filepath: Path, caption: str, 
                        events: pd.DataFrame, panels: List[List[str]], 
                        num_plots_per_row: int, min_fig_size: int,
                        color: pd.Series, palette, hue_order, 
@@ -129,7 +136,7 @@ class PanelPlot(BasePlot):
         self.point_types = point_types
         self.eventsInfoString = "".join(["{}:{} events, ".format(*i) for i in Counter(color).items()])
     
-        super(PanelPlot, self).__init__(filepath, caption, ax)
+        super(PanelPlot, self).__init__(enabled, filepath, caption, ax)
 
     def createPlot(self):
         """
@@ -168,7 +175,8 @@ class PanelPlotTargetVSPrediction(BasePlot):
     TODO: update for multiclass prediction, now only for binary classification
     '''
 
-    def __init__(self, filepath: Path, 
+    def __init__(self, enabled: bool,
+                       filepath: Path, 
                        caption: str, 
                        events: np.ndarray,
                        target: np.ndarray, 
@@ -189,7 +197,7 @@ class PanelPlotTargetVSPrediction(BasePlot):
         self.use_new_ax = use_new_ax
         self.n_points = n_points
     
-        super(PanelPlotTargetVSPrediction, self).__init__(filepath, caption, ax)
+        super(PanelPlotTargetVSPrediction, self).__init__(enabled, filepath, caption, ax)
 
     def createPlot(self):
         """
