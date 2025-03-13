@@ -81,6 +81,7 @@ class TrainerConfig:
 
 @dataclass
 class VisualizationConfig:
+    enabled: bool = True
     panel: List[List[str]]
     min_fig_size: int = 6
     n_points: int = 10000

@@ -225,7 +225,8 @@ def test(config: SupervisedFATEConfig, wandb_logger=None):
             for met in metric_ftns:
                 metrics_tracker.update(met.__name__, met(output, target))
 
-            plot = PanelPlotTargetVSPrediction(config.figures_save_dir / f"{name}.png",
+            plot = PanelPlotTargetVSPrediction(config.vis_config.enabled,
+                                            config.figures_save_dir / f"{name}.png",
                                             name, 
                                             data.squeeze(0).cpu().detach().numpy(),
                                             target.squeeze(0).cpu().detach().numpy(),
